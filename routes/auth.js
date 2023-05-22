@@ -4,6 +4,7 @@ const MySql = require("../routes/utils/MySql");
 const DButils = require("../routes/utils/DButils");
 const bcrypt = require("bcrypt");
 
+
 router.post("/Register", async (req, res, next) => {
   try {
     // parameters exists
@@ -18,8 +19,10 @@ router.post("/Register", async (req, res, next) => {
       email: req.body.email,
       profilePic: req.body.profilePic
     }
+    
     let users = [];
     users = await DButils.execQuery("SELECT username from users");
+    console.log(user_details.profilePic);
 
     if (users.find((x) => x.username === user_details.username))
       throw { status: 409, message: "Username taken" };
@@ -30,9 +33,12 @@ router.post("/Register", async (req, res, next) => {
       parseInt(process.env.bcrypt_saltRounds)
     );
     await DButils.execQuery(
-      `INSERT INTO users VALUES ('${user_details.username}', '${user_details.firstname}', '${user_details.lastname}',
-      '${user_details.country}', '${hash_password}', '${user_details.email}')`
+      `INSERT INTO mydb2.users VALUES ('${user_details.username}', '${user_details.firstname}', '${user_details.lastname}',
+      '${user_details.country}', '${hash_password}', '${user_details.email}','${user_details.profilePic}')`
     );
+    //checking that the element insereted (temporal solution for the problem )
+    DButils.execQuery("SELECT username from users");
+
     res.status(201).send({ message: "user created", success: true });
   } catch (error) {
     next(error);
@@ -72,5 +78,6 @@ router.post("/Logout", function (req, res) {
   req.session.reset(); // reset the session info --> send cookie when  req.session == undefined!!
   res.send({ success: true, message: "logout succeeded" });
 });
+
 
 module.exports = router;
