@@ -2,10 +2,7 @@
 node_modules
 .env
 .vscode
-.DButils
-.MySql
 
 #codes/routes/recipes.js
 #codes\routes\recipes.js
-temp_DB_use.js
-main.js
+
