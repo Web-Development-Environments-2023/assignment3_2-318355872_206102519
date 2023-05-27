@@ -6,6 +6,8 @@ var logger = require("morgan");
 const session = require("client-sessions");
 const DButils = require("./routes/utils/DButils");
 var cors = require('cors')
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
+
 
 const app = express();
 app.use(logger("dev")); //logger
@@ -102,3 +104,4 @@ process.on("SIGINT", function () {
   }
   process.exit();
 });
+// module.exports=app;
