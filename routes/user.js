@@ -52,8 +52,36 @@ router.get('/favorites', async (req,res,next) => {
     next(error); 
   }
 });
+router.post('/AddToWatched', async (req, res) => {
+  try {
+    const recipe_id = req.body.recipeId;
+    console.log(recipe_id);
+    const user_id = req.session.user_id;
 
+    // Call the AddToWatchedRecipes function
+    await user_utils.AddToWatchedRecipes(user_id, recipe_id);
 
+    // Retrieve the user_id from the users table
 
+    res.status(201).send("watched recipes added successful");
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+router.get('/RecentThreeWatched', async (req, res) => {
+  try {
+    const user_id = req.session.user_id;
+    const recentWatchedRecipes = await user_utils.getRecentWatchedRecipes(user_id);
+    console.log(recentWatchedRecipes)
+    preview_recipes= await recipe_utils.getRecipesPreview(recentWatchedRecipes)
+
+    res.status(200).send(preview_recipes);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 module.exports = router;
