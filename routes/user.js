@@ -72,11 +72,82 @@ router.post('/AddToWatched', async (req, res) => {
 router.get('/RecentThreeWatched', async (req, res) => {
   try {
     const user_id = req.session.user_id;
-    const recentWatchedRecipes = await user_utils.getRecentWatchedRecipes(user_id);
-    console.log(recentWatchedRecipes)
-    preview_recipes= await recipe_utils.getRecipesPreview(recentWatchedRecipes)
+    const full_info_recipes = await user_utils.getpreview_recipes(user_id);
+    console.log(full_info_recipes)
+    full_info_recipes= await recipe_utils.getRecipesPreview(full_info_recipes)
 
-    res.status(200).send(preview_recipes);
+    res.status(200).send(full_info_recipes);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.post('/AddPersonalRecipe',async(req,res)=>{
+  try{
+    const user_id= req.session.user_id;
+    const vegan= req.body.vegan?1:0;
+    const glutenFree=req.body.glutenFree?1:0;
+    const vegetarian=req.body.vegetarian?1:0;
+    let recipe_details = {
+      user_id: user_id,
+      title:req.body.title,
+      readyInMinutes:req.body.readyInMinutes,
+      image:req.body.image,
+      servings:req.body.servings,
+      popularity:req.body.popularity,
+      vegan:vegan,
+      vegetarian:vegetarian,
+      glutenFree:glutenFree,
+      extendedIngredients:req.body.extendedIngredients,
+      instructions:req.body.instructions
+    }
+    await user_utils.AddPersonalRecipes(recipe_details);
+    res.status(201).send("Personal recipe added successful");
+
+  }catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+})
+// get preview information about my personal recipes
+router.get('/GetPreviewPersonalRecipes', async (req, res) => {
+  try {
+    const user_id = req.session.user_id;
+    const full_info_recipes = await user_utils.GetPreviePersonalRecipes(user_id);
+    
+    console.log(full_info_recipes)
+    res.status(200).send({full_info_recipes});
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+// get information of recipes with insturctions and ingredients
+router.get('/GetfullPersonalRecipes', async (req, res) => {
+  try {
+    const user_id = req.session.user_id;
+    const full_info_recipes = await user_utils.GetfullPersonalRecipes(user_id);
+    
+    console.log(full_info_recipes)
+    res.status(200).send({full_info_recipes});
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+// check if user watched recipe or added to favorite
+router.get('/CheckFavoriteWatched/:recipeId', async (req, res) => {
+  try {
+    const user_id = req.session.user_id;
+    const recipeID=req.params.recipeId
+    const result = await user_utils.CheckIfRecipeWatchedOrFavorite(recipeID,user_id);
+    
+    console.log(result)
+    res.status(200).send(result);
 
   } catch (error) {
     console.error(error);
