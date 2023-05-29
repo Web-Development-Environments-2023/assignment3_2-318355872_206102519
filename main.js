@@ -6,6 +6,8 @@ var logger = require("morgan");
 const session = require("client-sessions");
 const DButils = require("./routes/utils/DButils");
 var cors = require('cors')
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
+
 
 const app = express();
 app.use(logger("dev")); //logger
@@ -60,7 +62,7 @@ const auth = require("./routes/auth");
 //#region cookie middleware
 app.use(function (req, res, next) {
   if (req.session && req.session.user_id) {
-    DButils.execQuery("SELECT user_id FROM users")
+    DButils.execQuery("SELECT id FROM users")
       .then((users) => {
         if (users.find((x) => x.user_id === req.session.user_id)) {
           req.user_id = req.session.user_id;
@@ -102,3 +104,4 @@ process.on("SIGINT", function () {
   }
   process.exit();
 });
+module.exports=app;
