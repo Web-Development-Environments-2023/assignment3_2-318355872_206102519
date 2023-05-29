@@ -152,6 +152,38 @@ async function getRecentWatchedRecipes(user_id) {
 
 
   }
+  // get family recipes function. function returns list of all family recipt by user name
+  async function GetFamilyRecipes(user_name){
+    const query= `
+    SELECT title,readyInMinutes,image,about,servings,vegan,vegetarian,glutenFree,extendedIngredients,instructions
+    FROM familyrecipes
+    WHERE username='${user_name}'
+    `;
+    let result = await DButils.execQuery(query);
+    for(let row in result){
+
+      if(result[row].glutenFree===0){
+        result[row].glutenFree=false;
+      }
+      else{
+        result[row].glutenFree=true
+      }
+      if( result[row].vegan===0){
+        result[row].vegan=false;
+      }
+      else{
+        result[row].vegan=true
+      }
+      if( result[row].vegetarian===0){
+        result[row].vegetarian=false;
+      }
+      else{
+        result[row].vegetarian=true
+      }
+
+  }
+  return result;
+}
 
 exports.markAsFavorite = markAsFavorite;
 exports.getFavoriteRecipes = getFavoriteRecipes;
@@ -161,3 +193,4 @@ exports.AddPersonalRecipes=AddPersonalRecipes;
 exports.GetPreviePersonalRecipes=GetPreviePersonalRecipes;
 exports.GetfullPersonalRecipes=GetfullPersonalRecipes;
 exports.CheckIfRecipeWatchedOrFavorite=CheckIfRecipeWatchedOrFavorite
+exports.GetFamilyRecipes=GetFamilyRecipes

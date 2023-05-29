@@ -154,5 +154,20 @@ router.get('/CheckFavoriteWatched/:recipeId', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+// get family recipes preview information
+router.get('/GetFamilyRecipesPreview', async (req, res) => {
+  try {
+    const user_name='nitay'
+    
+    const result = await user_utils.GetFamilyRecipes(user_name);
+    
+    console.log(result)
+    res.status(200).send(result);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 module.exports = router;
