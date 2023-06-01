@@ -3,7 +3,7 @@ const api_domain = "https://api.spoonacular.com/recipes";
 require("dotenv").config();
 const path = require('path')
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
-const apiKey="apiKey=48240d39af344d718700679bf24c8e2e"
+// const apiKey="apiKey=48240d39af344d718700679bf24c8e2e"
 
 /**
  * Get recipes list from spooncular response and extract the relevant recipe data for preview
@@ -95,15 +95,36 @@ function extractPreviewRecipeDetails(recipes_info) {
   }
 //   get 3 random recipes
 async function getRandomRecipes() {
-     complete_info =await axios.get(`${api_domain}/random?number=3`, {
-        params: {
-            apiKey: process.env.spooncular_apiKey
+    //  complete_info =await axios.get(`${api_domain}/random?number=3`, {
+    //     params: {
+    //         apiKey: process.env.spooncular_apiKey
+    //     }
+    // })
+    let response_back;
+    let counter=0
+    let good_result
+    =false
+    while(!good_result){
+        response_back=await axios.get(`${api_domain}/random?number=3`, {
+            params: {
+                apiKey: process.env.spooncular_apiKey
+            }
+        })
+        for(let i=0;i<response_back.data.recipes.length;i++){
+            if(response_back.data.recipes[i].analyzedInstructions.length>0){
+                counter=counter+1;
+            }
         }
-    })
-    const recipe_list_id= give_ids_list(complete_info)
-    console.log(recipe_list_id)
+        if(counter===3){
+            good_result=true
+        }
+    }
+    console.log("hi");
+
+    const recipe_list_id= give_ids_list(response_back);
+    // console.log(recipe_list_id)
     let recipe_previ= getRecipesPreview(recipe_list_id);
-    console.log(recipe_previ)
+    // console.log(recipe_previ)
     return recipe_previ;
 }
 // get recipe information by id. that's for page 7 after the user clicked on the picutre of ingredient

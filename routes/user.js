@@ -140,14 +140,23 @@ router.get('/GetfullPersonalRecipes', async (req, res) => {
   }
 });
 // check if user watched recipe or added to favorite
-router.get('/CheckFavoriteWatched/:recipeId', async (req, res) => {
+router.get("/CheckFavoriteWatched/:recipeId", async (req, res) => {
   try {
     const user_id = req.session.user_id;
     const recipeID=req.params.recipeId
-    const result = await user_utils.CheckIfRecipeWatchedOrFavorite(recipeID,user_id);
-    
-    console.log(result)
-    res.status(200).send(result);
+    const ids_list_json= JSON.parse(req.params.recipeId);
+    console.log(ids_list_json)
+    // const result = await user_utils.CheckIfRecipeWatchedOrFavorite(recipeID,user_id);
+    let promise_list=[]
+    let json_reutrn={}
+    for(let i=0;i<ids_list_json.length;i++){
+      let promise_push= user_utils.CheckIfRecipeWatchedOrFavorite(ids_list_json[i],user_id)
+      .then((value_reutrn)=>{json_reutrn[ids_list_json[i]]=value_reutrn;});
+      promise_list.push(promise_push);
+    }
+    await Promise.all(promise_list);
+    // console.log(result)
+    res.status(200).send(json_reutrn);
 
   } catch (error) {
     console.error(error);
