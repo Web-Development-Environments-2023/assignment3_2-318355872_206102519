@@ -72,9 +72,9 @@ router.post('/AddToWatched', async (req, res) => {
 router.get('/RecentThreeWatched', async (req, res) => {
   try {
     const user_id = req.session.user_id;
-    const full_info_recipes = await user_utils.getpreview_recipes(user_id);
+    let full_info_recipes = await user_utils.getpreview_recipes(user_id);
     console.log(full_info_recipes)
-    full_info_recipes= await recipe_utils.getRecipesPreview(full_info_recipes)
+    full_info_recipes = await recipe_utils.getRecipesPreview(full_info_recipes)
 
     res.status(200).send(full_info_recipes);
 

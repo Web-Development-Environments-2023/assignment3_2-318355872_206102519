@@ -37,7 +37,7 @@ CREATE TABLE IF Not EXISTS mypersonalrecipes(
     );
 
 CREATE TABLE IF Not EXISTS users(
-    id INT,
+    id INT AUTO_INCREMENT,
     username VARCHAR(50),
     firstname VARCHAR(50),
     lastname VARCHAR(50),
