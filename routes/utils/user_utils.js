@@ -1,21 +1,33 @@
 const DButils = require("./DButils");
+
+/**
+ *  Func that add to the FavoriteRecipes Table record with the user_id and recipe_id
+ */
 async function markAsFavorite(user_id, recipe_id){
     await DButils.execQuery(`insert into FavoriteRecipes values ('${user_id}',${recipe_id})`);
-    // recipes_id = await DButils.execQuery(`select recipe_id from FavoriteRecipes where user_id='${user_id}'`);
-    DButils.execQuery(`SELECT '${user_id}' from users`);
 }
 
+/**
+ * Func that search all recipe_id that have the user_id in the FavoriteRecipes Table
+ */
 async function getFavoriteRecipes(user_id){
     const recipes_id = await DButils.execQuery(`select recipe_id from FavoriteRecipes where user_id='${user_id}'`);
     return recipes_id;
 }
-// add recipe to watched recipe table
+
+/**
+ * Func that add to the WatchedRecipes Table record with the user_id and recipe_id
+ */
 async function AddToWatchedRecipes(user_id,recipe_id){
     const currentDate = new Date().toISOString().split('T')[0];
     await DButils.execQuery(`INSERT INTO watchedrecipes VALUES ('${recipe_id}','${user_id}', '${currentDate}')`);
-    // DButils.execQuery(`SELECT '${user_id}' from users`);
 }
-// get indication for remcipe if it has been watched or add to my favorite
+
+/**
+ * Function that check for pair : recipe_id and user_id if the User have watch it or mark it as favorite using
+ * the two tables FavoriteRecipes and WatchedRecipes
+ * and return dict {watched:bool,favorite:bool}
+ */
 async function CheckIfRecipeWatchedOrFavorite(recipe_id,user_id){
   result_return={};
   try {
@@ -51,7 +63,10 @@ async function CheckIfRecipeWatchedOrFavorite(recipe_id,user_id){
     throw new Error('Failed to check');
   }
 }
-// Define the getRecentWatchedRecipes function
+/**
+ * Function that get all Recipes that watched by the user_id
+ * @returns {Promise<[]>}
+ */
 async function getRecentWatchedRecipes(user_id) {
     try {
       const query = `
@@ -73,7 +88,12 @@ async function getRecentWatchedRecipes(user_id) {
       throw new Error('Failed to retrieve recent watched recipes');
     }
   }
-  // add personal recipes to DB
+/**
+ * Func that get all details that necessary to create record on the recipe table ,
+ * and save the recipe_id and the user_id in mypersonalrecipes table
+ * @param recipe_details
+ * @returns {Promise<void>}
+ */
   async function AddPersonalRecipes(recipe_details){
     await DButils.execQuery(`INSERT INTO recipes VALUES (default,'${recipe_details.user_id}','${recipe_details.title}',
      '${recipe_details.readyInMinutes}','${recipe_details.image}','${recipe_details.servings}','${recipe_details.popularity}',
@@ -81,9 +101,11 @@ async function getRecentWatchedRecipes(user_id) {
      '${recipe_details. instructions}')`);
     var max_recipe_id = await DButils.execQuery('SELECT MAX(recipe_id) FROM recipes;');
     await DButils.execQuery(`INSERT INTO mypersonalrecipes VALUES('${max_recipe_id[0]['MAX(recipe_id)']}', '${recipe_details.user_id}')`)
-    await DButils.execQuery(`SELECT user_id from users where user_id='${recipe_details.user_id}'`);
   }
-  // get personal recipes from DB
+/**
+ * Func that returns all personal recipes in preview format of the user_id from the DB
+ * @returns {Promise<*>}
+ */
   async function GetPreviePersonalRecipes(user_id){
     const query = `
       SELECT title,readyInMinutes,image,popularity,vegan,vegetarian,glutenFree
@@ -116,7 +138,10 @@ async function getRecentWatchedRecipes(user_id) {
 
 
   }
-  // function the give the full information about personal recipes
+/**
+ * Func that returns all personal recipes in full format of the user_id from the DB
+ * @returns {Promise<*>}
+ */
   async function GetfullPersonalRecipes(user_id){
     const query = `
       SELECT title,readyInMinutes,image,servings,popularity,vegan,vegetarian,glutenFree,extendedIngredients,instructions
@@ -144,14 +169,14 @@ async function getRecentWatchedRecipes(user_id) {
         else{
           result[row].vegetarian=true
         }
-
-
       }
       return result;
-
-
   }
   // get family recipes function. function returns list of all family recipt by user name
+/**
+ * Func that returns all family recipes in full format of the user_id from the DB
+ * @returns {Promise<*>}
+ */
   async function GetFamilyRecipes(user_id){
     const query= `
     SELECT title,readyInMinutes,image,about,servings,vegan,vegetarian,glutenFree,extendedIngredients,instructions
@@ -184,6 +209,11 @@ async function getRecentWatchedRecipes(user_id) {
   return result;
 }
 
+/**
+ * Func that get the username from the DB using the user_id
+ * @param user_id
+ * @returns {Promise<*>}
+ */
 async function get_username_by_id(user_id)
 {
   const query= `
@@ -197,6 +227,9 @@ async function get_username_by_id(user_id)
       }
 }
 
+/**
+ * exports all the function that need for the user routes
+ */
 exports.markAsFavorite = markAsFavorite;
 exports.getFavoriteRecipes = getFavoriteRecipes;
 exports.AddToWatchedRecipes=AddToWatchedRecipes,

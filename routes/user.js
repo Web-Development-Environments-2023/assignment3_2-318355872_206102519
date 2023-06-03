@@ -37,9 +37,9 @@ router.post('/favorites', async (req,res,next) => {
   }
 })
 
-// /**
-//  * This path returns the favorites recipes that were saved by the logged-in user
-//  */
+/**
+ * This path returns the favorites recipes of the connected user
+ */
 router.get('/favorites', async (req,res,next) => {
   try{
     const user_id = req.session.user_id;
@@ -53,6 +53,9 @@ router.get('/favorites', async (req,res,next) => {
     next(error); 
   }
 });
+/**
+ * This path update the DB with the watched recipe of the connected user
+ */
 router.post('/AddToWatched', async (req, res) => {
   try {
     const recipe_id = req.body.recipeId;
@@ -70,6 +73,9 @@ router.post('/AddToWatched', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+/**
+ * This path returns the recent three watched recipes of the connected user
+ */
 router.get('/RecentThreeWatched', async (req, res) => {
   try {
     const user_id = req.session.user_id;
@@ -84,7 +90,9 @@ router.get('/RecentThreeWatched', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
+/**
+ * This path update the DB with the new Personal recipe of the connected user
+ */
 router.post('/AddPersonalRecipe',async(req,res)=>{
   try{
     const user_id= req.session.user_id;
@@ -112,7 +120,9 @@ router.post('/AddPersonalRecipe',async(req,res)=>{
     res.status(500).json({ error: 'Internal server error' });
   }
 })
-// get preview information about my personal recipes
+/**
+ * This path returns the personal recipes of the connected user in preview format
+ */
 router.get('/GetPreviewPersonalRecipes', async (req, res) => {
   try {
     const user_id = req.session.user_id;
@@ -126,7 +136,9 @@ router.get('/GetPreviewPersonalRecipes', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-// get information of recipes with insturctions and ingredients
+/**
+ * This path returns the personal recipes of the connected user in full format
+ */
 router.get('/GetfullPersonalRecipes', async (req, res) => {
   try {
     const user_id = req.session.user_id;
@@ -140,8 +152,10 @@ router.get('/GetfullPersonalRecipes', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-// check if user watched recipe or added to favorite by using list of recipes ids
-// and return list that for each id : {watched_bool,favorite_bool}
+/**
+ * This path check if user watched recipe or added to favorite by using list of recipes ids
+ * return list that for each id : {watched_bool,favorite_bool}
+ */
 router.get("/CheckFavoriteWatched/:recipeIds", async (req, res) => {
   try {
     const user_id = req.session.user_id;
@@ -166,7 +180,9 @@ router.get("/CheckFavoriteWatched/:recipeIds", async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-// get family recipes preview information
+/**
+ * This path returns the family recipes of the connected user in full format
+ */
 router.get('/GetFamilyRecipes', async (req, res) => {
   try {
     const result = await user_utils.GetFamilyRecipes(req.session.user_id);
