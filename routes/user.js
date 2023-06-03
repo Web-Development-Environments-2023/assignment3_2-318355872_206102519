@@ -3,6 +3,7 @@ var router = express.Router();
 const DButils = require("./utils/DButils");
 const user_utils = require("./utils/user_utils");
 const recipe_utils = require("./utils/recipes_utils");
+const {get_username_by_id} = require("./utils/user_utils");
 
 /**
  * Authenticate all incoming requests by middleware
@@ -10,8 +11,8 @@ const recipe_utils = require("./utils/recipes_utils");
 router.use(async function (req, res, next) {
   console.log(req.session)
   if (req.session && req.session.user_id) {
-    DButils.execQuery("SELECT id FROM users").then((users) => {
-      if (users.find((x) => x.id === req.session.user_id)) {
+    DButils.execQuery("SELECT user_id FROM users").then((users) => {
+      if (users.find((x) => x.user_id === req.session.user_id)) {
         req.user_id = req.session.user_id;
         next();
       }
@@ -36,9 +37,9 @@ router.post('/favorites', async (req,res,next) => {
   }
 })
 
-// /**
-//  * This path returns the favorites recipes that were saved by the logged-in user
-//  */
+/**
+ * This path returns the favorites recipes of the connected user
+ */
 router.get('/favorites', async (req,res,next) => {
   try{
     const user_id = req.session.user_id;
@@ -52,6 +53,9 @@ router.get('/favorites', async (req,res,next) => {
     next(error); 
   }
 });
+/**
+ * This path update the DB with the watched recipe of the connected user
+ */
 router.post('/AddToWatched', async (req, res) => {
   try {
     const recipe_id = req.body.recipeId;
@@ -69,12 +73,15 @@ router.post('/AddToWatched', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+/**
+ * This path returns the recent three watched recipes of the connected user
+ */
 router.get('/RecentThreeWatched', async (req, res) => {
   try {
     const user_id = req.session.user_id;
-    const full_info_recipes = await user_utils.getpreview_recipes(user_id);
+    let full_info_recipes = await user_utils.getRecentWatchedRecipes(user_id);
     console.log(full_info_recipes)
-    full_info_recipes= await recipe_utils.getRecipesPreview(full_info_recipes)
+    full_info_recipes = await recipe_utils.getRecipesPreview(full_info_recipes)
 
     res.status(200).send(full_info_recipes);
 
@@ -83,7 +90,9 @@ router.get('/RecentThreeWatched', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
+/**
+ * This path update the DB with the new Personal recipe of the connected user
+ */
 router.post('/AddPersonalRecipe',async(req,res)=>{
   try{
     const user_id= req.session.user_id;
@@ -111,41 +120,49 @@ router.post('/AddPersonalRecipe',async(req,res)=>{
     res.status(500).json({ error: 'Internal server error' });
   }
 })
-// get preview information about my personal recipes
+/**
+ * This path returns the personal recipes of the connected user in preview format
+ */
 router.get('/GetPreviewPersonalRecipes', async (req, res) => {
   try {
     const user_id = req.session.user_id;
-    const full_info_recipes = await user_utils.GetPreviePersonalRecipes(user_id);
+    const preview_personal_recipes = await user_utils.GetPreviePersonalRecipes(user_id);
     
-    console.log(full_info_recipes)
-    res.status(200).send({full_info_recipes});
+    console.log(preview_personal_recipes)
+    res.status(200).send({preview_personal_recipes});
 
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-// get information of recipes with insturctions and ingredients
+/**
+ * This path returns the personal recipes of the connected user in full format
+ */
 router.get('/GetfullPersonalRecipes', async (req, res) => {
   try {
     const user_id = req.session.user_id;
-    const full_info_recipes = await user_utils.GetfullPersonalRecipes(user_id);
+    const full_personal_recipes = await user_utils.GetfullPersonalRecipes(user_id);
     
-    console.log(full_info_recipes)
-    res.status(200).send({full_info_recipes});
+    console.log(full_personal_recipes)
+    res.status(200).send({full_personal_recipes});
 
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-// check if user watched recipe or added to favorite
-router.get("/CheckFavoriteWatched/:recipeId", async (req, res) => {
+/**
+ * This path check if user watched recipe or added to favorite by using list of recipes ids
+ * return list that for each id : {watched_bool,favorite_bool}
+ */
+router.get("/CheckFavoriteWatched/:recipeIds", async (req, res) => {
   try {
     const user_id = req.session.user_id;
-    const recipeID=req.params.recipeId
-    const ids_list_json= JSON.parse(req.params.recipeId);
-    console.log(ids_list_json)
+    // const recipe_id=req.params.recipeId
+    // const ids_list_json= JSON.parse(req.params.recipeId);
+    const ids_list_json=  req.params.recipeIds.split(',');
+    console.log('Recipe IDs received: ' + ids_list_json)
     // const result = await user_utils.CheckIfRecipeWatchedOrFavorite(recipeID,user_id);
     let promise_list=[]
     let json_reutrn={}
@@ -163,13 +180,13 @@ router.get("/CheckFavoriteWatched/:recipeId", async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-// get family recipes preview information
-router.get('/GetFamilyRecipesPreview', async (req, res) => {
+/**
+ * This path returns the family recipes of the connected user in full format
+ */
+router.get('/GetFamilyRecipes', async (req, res) => {
   try {
-    const user_name='nitay'
-    
-    const result = await user_utils.GetFamilyRecipes(user_name);
-    
+    const result = await user_utils.GetFamilyRecipes(req.session.user_id);
+
     console.log(result)
     res.status(200).send(result);
 

@@ -7,9 +7,8 @@ require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 
 /**
  * Get recipes list from spooncular response and extract the relevant recipe data for preview
- * @param {*} recipes_info 
+ * @param {*} recipe_id
  */
-
 
 async function getRecipeInformation(recipe_id) {
     return await axios.get(`${api_domain}/${recipe_id}/information`, {
@@ -20,8 +19,11 @@ async function getRecipeInformation(recipe_id) {
     });
 }
 
-
-
+/**
+ * func that get the all details of recipe
+ * @param recipe_id
+ * @returns {Promise<{readyInMinutes: *, image: *, popularity: *, vegetarian: *, glutenFree: *, id: *, vegan: *, title: *}>}
+ */
 async function getRecipeDetails(recipe_id) {
     let recipe_info = await getRecipeInformation(recipe_id);
     let { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree } = recipe_info.data;
@@ -39,6 +41,11 @@ async function getRecipeDetails(recipe_id) {
     }
 }
 // implmentation of Preview Recipes Details
+/**
+ * func that take recipes_info tne extract the data from it
+ * @param recipes_info
+ * @returns {*}
+ */
 function extractPreviewRecipeDetails(recipes_info) {
     return recipes_info.map((recipe_info) => {
         //check the data type so it can work with diffrent types of data
@@ -68,7 +75,12 @@ function extractPreviewRecipeDetails(recipes_info) {
         }
     })
   }
-  async function getRecipesPreview(recipes_ids_list) {
+
+/**
+ * func thar get ids of recipes and return list of all recipes with all there params
+ * @param recipes_ids_list
+ */
+async function getRecipesPreview(recipes_ids_list) {
     let promises = [];
     recipes_ids_list.map((id) => {
         promises.push(getRecipeInformation(id));
@@ -78,7 +90,12 @@ function extractPreviewRecipeDetails(recipes_info) {
     // console.log(info_res);
     return extractPreviewRecipeDetails(info_res);
   }
-  function give_ids_list(response){
+
+/**
+ * func that get response and returns the ids on it
+ * @param response
+ */
+function give_ids_list(response){
     let recipes= response.data.recipes
     list_id=[]
     recipes.map((recipe)=>{list_id.push(recipe.id);
@@ -86,6 +103,10 @@ function extractPreviewRecipeDetails(recipes_info) {
     return list_id;
   }
 //   give id of recipes from search
+/**
+ * func that return recipes ids from the search response
+ * @param response
+ */
   function give_ids_list_by_search(response){
     let results= response.data.results
     list_id=[]
@@ -94,12 +115,11 @@ function extractPreviewRecipeDetails(recipes_info) {
     return list_id;
   }
 //   get 3 random recipes
+/**
+ * Func that return list of 3 randoms precipices
+ * @returns {Promise<*>}
+ */
 async function getRandomRecipes() {
-    //  complete_info =await axios.get(`${api_domain}/random?number=3`, {
-    //     params: {
-    //         apiKey: process.env.spooncular_apiKey
-    //     }
-    // })
     let response_back;
     let counter=0
     let good_result
@@ -119,35 +139,39 @@ async function getRandomRecipes() {
             good_result=true
         }
     }
-    console.log("hi");
-
     const recipe_list_id= give_ids_list(response_back);
     // console.log(recipe_list_id)
     let recipe_previ= getRecipesPreview(recipe_list_id);
     // console.log(recipe_previ)
     return recipe_previ;
 }
-// get recipe information by id. that's for page 7 after the user clicked on the picutre of ingredient
+/**
+ * Func that get recipe information by id. that's for page 7 after the user clicked on the picutre of ingredient
+ * @param recipe_id
+ * @returns {Promise<{readyInMinutes: *, image: *, servings: *, popularity: *, analyzedInstructions: *, vegetarian: *, glutenFree: *, id: *, vegan: *, title: *, extendedIngredients: *}>}
+ */
 async function getRecipeInfoClicking(recipe_id){
     let search_info= await getRecipeInformation(recipe_id)
     let recipes_information=GetFullDataRecipe(search_info);
     extract_ingerdients(recipes_information);
     analyzedInstruction(recipes_information);
     return recipes_information;
-    
-
 }
-// info=getRecipeInfoClicking(324694)
 
-
-// analyzed ingerdients
+/**
+ * func that extract ingredients from the search query
+ * @param search_info
+ */
  function extract_ingerdients(search_info){
     let ingredientsList= search_info.extendedIngredients;
     let ingredients=[]
     ingredientsList.map((ingredient)=>{ingredients.push(ingredient.original)})
     search_info.extendedIngredients=ingredients;
 }
-// analyzed insturctions
+/**
+ * func that analyzed insturctions
+ * @param search_info
+ */
 function analyzedInstruction(search_info){
     let instructions_List= search_info.analyzedInstructions
     let instructions= []
@@ -161,6 +185,13 @@ function analyzedInstruction(search_info){
     }
     search_info.analyzedInstructions=instructions
 }
+
+/**
+ * Func that return the full format of the Recipe
+ * @param recipe_info
+ * @returns {{readyInMinutes: *, image: *, servings: *, popularity: *, analyzedInstructions: *, vegetarian: *, glutenFree: *, id: *, vegan: *, title: *, extendedIngredients: *}}
+ * @constructor
+ */
 function GetFullDataRecipe(recipe_info){
     
     let { id, title, readyInMinutes, image,servings, aggregateLikes, vegan, vegetarian, glutenFree,extendedIngredients,analyzedInstructions } = recipe_info.data;
@@ -179,7 +210,13 @@ function GetFullDataRecipe(recipe_info){
     }
 
 }
-// the ExtractParameters extract the parameters below in the complete_info list
+
+/**
+ * Func that ExtractParameters extract the parameters below in the complete_info list
+ * @param query
+ * @param searching_parameters
+ * @constructor
+ */
 function ExtractParameters(query,searching_parameters){
     // change the name of the variable below
 const complete_info_list=["cuisine","diet","intolerance"];
@@ -189,6 +226,11 @@ for(let i=0;i<complete_info_list.length;i++){
     }
 }
 }
+
+/**
+ * Func that Search Recipes by the query that get from the user and return list of all recipes
+ * @param search_params
+ */
 async function SearchRecipes(search_params){
     let searchResponse = await axios.get(`${api_domain}/complexSearch?${process.env.apiKey}`,
     {
@@ -199,7 +241,9 @@ async function SearchRecipes(search_params){
 
 }
 
-
+/**
+ * exports all the function that need for the user routes
+ */
 module.exports={getRecipeDetails:getRecipeDetails,
     getRecipesPreview:getRecipesPreview,
     getRandomRecipes:getRandomRecipes,
@@ -207,6 +251,3 @@ module.exports={getRecipeDetails:getRecipeDetails,
     SearchRecipes:SearchRecipes,
     getRecipeInfoClicking:getRecipeInfoClicking
 }
-
-
-
