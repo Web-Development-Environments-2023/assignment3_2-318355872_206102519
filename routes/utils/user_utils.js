@@ -1,5 +1,4 @@
 const DButils = require("./DButils");
-
 async function markAsFavorite(user_id, recipe_id){
     await DButils.execQuery(`insert into FavoriteRecipes values ('${user_id}',${recipe_id})`);
     // recipes_id = await DButils.execQuery(`select recipe_id from FavoriteRecipes where user_id='${user_id}'`);
@@ -14,15 +13,15 @@ async function getFavoriteRecipes(user_id){
 async function AddToWatchedRecipes(user_id,recipe_id){
     const currentDate = new Date().toISOString().split('T')[0];
     await DButils.execQuery(`INSERT INTO watchedrecipes VALUES ('${recipe_id}','${user_id}', '${currentDate}')`);
-    DButils.execQuery(`SELECT '${user_id}' from users`);
+    // DButils.execQuery(`SELECT '${user_id}' from users`);
 }
-// get indication for recipe if it has been watched or add to my favorite
+// get indication for remcipe if it has been watched or add to my favorite
 async function CheckIfRecipeWatchedOrFavorite(recipe_id,user_id){
   result_return={};
   try {
     const query = `
     SELECT *
-    FROM mydb2.watchedRecipes
+    FROM watchedRecipes
     WHERE user_id='${user_id}' AND recipe_id='${recipe_id}'
     `;
     const result = await DButils.execQuery(query);
@@ -36,8 +35,8 @@ async function CheckIfRecipeWatchedOrFavorite(recipe_id,user_id){
     // check if recipe in favorite
     const query_2 = `
     SELECT *
-    FROM mydb2.favoriterecipes
-    WHERE id='${user_id}' AND recipe_id='${recipe_id}'
+    FROM favoriterecipes
+    WHERE user_id='${user_id}' AND recipe_id='${recipe_id}'
     `;
     const result_2 = await DButils.execQuery(query_2);
     if(result_2.length>0){
@@ -57,7 +56,7 @@ async function getRecentWatchedRecipes(user_id) {
     try {
       const query = `
       SELECT recipe_id
-      FROM mydb2.watchedRecipes
+      FROM watchedRecipes
       WHERE user_id='${user_id}'
       ORDER BY date_watched DESC
       LIMIT 3
@@ -76,18 +75,20 @@ async function getRecentWatchedRecipes(user_id) {
   }
   // add personal recipes to DB
   async function AddPersonalRecipes(recipe_details){
-    await DButils.execQuery(`INSERT INTO mypersonalrecipes VALUES (default,'${recipe_details.user_id}','${recipe_details.title}',
+    await DButils.execQuery(`INSERT INTO recipes VALUES (default,'${recipe_details.user_id}','${recipe_details.title}',
      '${recipe_details.readyInMinutes}','${recipe_details.image}','${recipe_details.servings}','${recipe_details.popularity}',
      '${recipe_details.vegan}','${recipe_details.vegetarian}','${recipe_details.glutenFree}','${recipe_details.extendedIngredients}',
      '${recipe_details. instructions}')`);
-    DButils.execQuery(`SELECT '${recipe_details.user_id}' from users`);
+    var max_recipe_id = await DButils.execQuery('SELECT MAX(recipe_id) FROM recipes;');
+    await DButils.execQuery(`INSERT INTO mypersonalrecipes VALUES('${max_recipe_id[0]['MAX(recipe_id)']}', '${recipe_details.user_id}')`)
+    await DButils.execQuery(`SELECT user_id from users where user_id='${recipe_details.user_id}'`);
   }
   // get personal recipes from DB
   async function GetPreviePersonalRecipes(user_id){
     const query = `
       SELECT title,readyInMinutes,image,popularity,vegan,vegetarian,glutenFree
-      FROM mydb2.mypersonalrecipes
-      WHERE user_id='${user_id}'
+      FROM recipes re join mypersonalrecipes m on re.recipe_id = m.recipe_id
+      WHERE re.user_id='${user_id}'
       `;
       let result = await DButils.execQuery(query);
       for(let row in result){
@@ -110,8 +111,6 @@ async function getRecentWatchedRecipes(user_id) {
         else{
           result[row].vegetarian=true
         }
-
-
       }
       return result;
 
@@ -121,8 +120,8 @@ async function getRecentWatchedRecipes(user_id) {
   async function GetfullPersonalRecipes(user_id){
     const query = `
       SELECT title,readyInMinutes,image,servings,popularity,vegan,vegetarian,glutenFree,extendedIngredients,instructions
-      FROM mydb2.mypersonalrecipes
-      WHERE user_id='${user_id}'
+      FROM recipes re join mypersonalrecipes m on re.recipe_id = m.recipe_id
+      WHERE re.user_id='${user_id}'
       `;
       let result = await DButils.execQuery(query);
       for(let row in result){
@@ -153,11 +152,11 @@ async function getRecentWatchedRecipes(user_id) {
 
   }
   // get family recipes function. function returns list of all family recipt by user name
-  async function GetFamilyRecipes(user_name){
+  async function GetFamilyRecipes(user_id){
     const query= `
     SELECT title,readyInMinutes,image,about,servings,vegan,vegetarian,glutenFree,extendedIngredients,instructions
-    FROM familyrecipes
-    WHERE username='${user_name}'
+    FROM recipes re join familyrecipes f on re.recipe_id = f.recipe_id
+    WHERE re.user_id='${user_id}'
     `;
     let result = await DButils.execQuery(query);
     for(let row in result){
@@ -185,6 +184,19 @@ async function getRecentWatchedRecipes(user_id) {
   return result;
 }
 
+async function get_username_by_id(user_id)
+{
+  const query= `
+  SELECT username
+  FROM users
+  WHERE user_id='${user_id}'
+    `;
+      let result = await DButils.execQuery(query);
+      for(let row in result){
+        return result[row].username
+      }
+}
+
 exports.markAsFavorite = markAsFavorite;
 exports.getFavoriteRecipes = getFavoriteRecipes;
 exports.AddToWatchedRecipes=AddToWatchedRecipes,
@@ -194,3 +206,4 @@ exports.GetPreviePersonalRecipes=GetPreviePersonalRecipes;
 exports.GetfullPersonalRecipes=GetfullPersonalRecipes;
 exports.CheckIfRecipeWatchedOrFavorite=CheckIfRecipeWatchedOrFavorite
 exports.GetFamilyRecipes=GetFamilyRecipes
+exports.get_username_by_id=get_username_by_id;

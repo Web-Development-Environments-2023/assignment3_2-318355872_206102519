@@ -85,11 +85,9 @@ paths:
                   $ref: '#/components/schemas/RecipePreview'
         "401":
           description: user is not authorized
-      security:
-      - cookieAuth: []
     post:
       tags:
-      - Users
+        - Users
       summary: save recipe in the favorites list of a user
       description: save recipe in the favorites list of a user
       requestBody:
@@ -98,41 +96,297 @@ paths:
             schema:
               type: object
               properties:
-                reciepeId:
+                recipeId:
                   type: string
-                  description: reciepe's id which the user saved
+                  description: recipeId's id which the user saved
                   example: 716429
       responses:
         "200":
           description: The Recipe successfully saved as favorite
         "401":
           description: user is not authorized
-      security:
-      - cookieAuth: []
-  /recipes/{recipeId}:
+  /users/AddToWatched:
+    post:
+      tags:
+        - Users
+      summary: Add the recipe to the watched table
+      description: Add the recipe to the watched table
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipeId:
+                  type: string
+                  description: recipeId's id which the user saved
+                  example: 716429
+      responses:
+        '200':
+          description: The recipe added to the table
+        '401':
+          description: Unauthorized
+  /users/RecentThreeWatched:
     get:
       tags:
-      - Recipes
-      summary: Return preview details on recipe by his ID
-      description: Return preview details on recipe by his ID
-      parameters:
-      - name: recipeId
-        in: path
-        description: recipe's id
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
+        - Users
+      summary: Get the 3 last recipe that the user watched
+      description: Returns the 3 last recipec the user was watched
       responses:
-        "200":
-          description: data about the recipe
+        '200':
+          description: A list of 3 recipe that the user have watched
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RecipePreview'
+  /users/AddPersonalRecipe:
+    post:
+      tags:
+        - Users
+      summary: Create a Personal Recipe
+      requestBody:
+        description: JSON request body for creating the recipe
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                image:
+                  type: string
+                  description: the image file loaction
+                readyInMinutes:
+                  type: integer
+                  format: int64
+                  description: The amount of time to cook the meal
+                vegan:
+                  type: boolean
+                  description: If the recipe is vegan or not
+                vegetarian:
+                  type: boolean
+                  description: indication if the recipe is vegetarian
+                  example: false
+                glutenFree:
+                  type: boolean
+                  description: If the recipe is gluten free
+                extendedIngredients:
+                  type: array
+                  items:
+                    {type: string}
+                  description: list of all the ingredeients that need for cook this meal
+                instructions:
+                  type: string
+                  description: instructions for cooking the meal
+                servings:
+                  type: integer
+                  format: int64
+                popularity:
+                  type: integer
+                  description: how many likes got this recipe
+                  example: 5987
+              required:
+                - title
+                - image
+                - readyInMinutes
+                - vegan
+                - vegetarian
+                - glutenFree
+                - extendedIngredients
+                - instructions
+                - servings
+                - popularity
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /users/GetPreviewPersonalRecipes:
+    get:
+      tags:
+        - Users
+      summary: Get the personal recipes only in the minimal format
+      description: Get the personal recipes only in the minimal format
+      responses:
+        '200':
+          description: A List of all presonal recipes of the connected user only in the minimal format
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                    type: object
+                    properties:
+                      title:
+                        type: string
+                      image:
+                        type: string
+                        description: the image file loaction
+                      readyInMinutes:
+                        type: integer
+                        format: int64
+                        description: The amount of time to cook the meal
+                      vegan:
+                        type: boolean
+                        description: If the recipe is vegan or not
+                      vegetarian:
+                        type: boolean
+                        description: indication if the recipe is vegetarian
+                        example: false
+                      glutenFree:
+                        type: boolean
+                        description: If the recipe is gluten free
+                      popularity:
+                        type: integer
+                        description: how many likes got this recipe
+                        example: 5987
+                    required:
+                      - title
+                      - image
+                      - readyInMinutes
+                      - vegan
+                      - vegetarian
+                      - glutenFree
+                      - popularity
+  /users/GetfullPersonalRecipes:
+    get:
+      tags:
+        - Users
+      summary: Get all user recipes in the full format
+      description: Get all user recipes in the full format
+      responses:
+        '200':
+          description: A list of all recipes of the suer connected
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RecipePreview'
+  /users/CheckFavoriteWatched/{recipeIds}:
+    get:
+      tags:
+        - Users
+      summary: Return if recipes with the given IDs are watched or favorite
+      description: For a list of recipe IDs, return if each recipe is marked as watched or favorite.
+      parameters:
+        - name: recipeIds
+          in: path
+          description: List of recipe IDs
+          required: true
+          style: simple
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: Return a list of dictionaries indicating if each recipe is watched or favorite
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    recipeId:
+                      type: string
+                    watched:
+                      type: boolean
+                    favorite:
+                      type: boolean
+  /users/GetFamilyRecipes:
+    get:
+      tags:
+        - Users
+      summary: get all recipes of the user family
+      description: get all recipes of the user family
+      responses:
+        '200':
+          description: get all recipes of the user family
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RecipePreview'
+  /recipes/main_page_3_random:
+    get:
+      tags:
+        - Recipes
+      summary: Get 3 random recipes for the main website
+      description: Returns 3 random recipes from the database
+      responses:
+        '200':
+          description: A list of 3 random recipe
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RecipePreview'
+  /recipes/{recipe_id}:
+    get:
+      tags:
+        - Recipes
+      summary: Get a recipe by ID
+      description: Returns a recipe with the specified ID
+      parameters:
+        - in: path
+          name: recipe_id
+          schema:
+            type: integer
+          required: true
+          description: ID of the recipe to retrieve
+      responses:
+        '200':
+          description: The recipe with the specified ID
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/RecipePreview'
-        "404":
-          description: recipeId is not exists
+        '404':
+          description: Recipe not found
+  /recipes/search:
+    get:
+      tags:
+        - Recipes
+      summary: Search for recipes by name
+      description: Returns a list of recipes with names prefix is in the search term
+      parameters:
+        - in: query
+          name: query
+          schema:
+            type: string
+          required: true
+          description: The search term to use
+        - in: query
+          name: number
+          schema:
+            type: integer
+            minimum: 5
+            maximum: 15
+            default: 5
+          description: The maximum number of recipes to return (default is 5)
+      responses:
+        '200':
+          description: A list of recipes matching the search term
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RecipePreview'
 components:
   schemas:
     User:
@@ -169,11 +423,6 @@ components:
           type: string
           description: user's email
           example: my_name12@gmail.com
-        # image-url:
-        #   pattern: URL
-        #   type: string
-        #   description: URL for the user's image
-        #   example: https://cloudinary.com/
       description: Model containing user info
     LoginScheme:
       type: object
@@ -194,7 +443,7 @@ components:
     RecipePreview:
       type: object
       properties:
-        id:
+        recipeId:
           type: integer
           description: recipe identifier
           example: 102
@@ -227,4 +476,14 @@ components:
           type: boolean
           description: indication if the recipe is gluten free
           example: false
-  
+        extendedIngredients:
+          type: array
+          items:
+            { type: string }
+          description: list of all the ingredeients that need for cook this meal
+        instructions:
+          type: string
+          description: instructions for cooking the meal
+        servings:
+          type: integer
+          format: int64
