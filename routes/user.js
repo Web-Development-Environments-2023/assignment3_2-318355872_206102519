@@ -43,7 +43,6 @@ router.post('/favorites', async (req,res,next) => {
 router.get('/favorites', async (req,res,next) => {
   try{
     const user_id = req.session.user_id;
-    let favorite_recipes = {};
     const recipes_id = await user_utils.getFavoriteRecipes(user_id);
     let recipes_id_array = [];
     recipes_id.map((element) => recipes_id_array.push(element.recipe_id)); //extracting the recipe ids into array
@@ -159,11 +158,8 @@ router.get('/GetfullPersonalRecipes', async (req, res) => {
 router.get("/CheckFavoriteWatched/:recipeIds", async (req, res) => {
   try {
     const user_id = req.session.user_id;
-    // const recipe_id=req.params.recipeId
-    // const ids_list_json= JSON.parse(req.params.recipeId);
     const ids_list_json=  req.params.recipeIds.split(',');
     console.log('Recipe IDs received: ' + ids_list_json)
-    // const result = await user_utils.CheckIfRecipeWatchedOrFavorite(recipeID,user_id);
     let promise_list=[]
     let json_reutrn={}
     for(let i=0;i<ids_list_json.length;i++){

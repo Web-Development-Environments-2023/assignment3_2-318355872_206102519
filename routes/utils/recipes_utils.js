@@ -40,7 +40,6 @@ async function getRecipeDetails(recipe_id) {
         
     }
 }
-// implmentation of Preview Recipes Details
 /**
  * func that take recipes_info tne extract the data from it
  * @param recipes_info
@@ -87,7 +86,6 @@ async function getRecipesPreview(recipes_ids_list) {
     });
     let info_res = await Promise.all(promises);
     info_res.map((recp)=>{console.log(recp.data)});
-    // console.log(info_res);
     return extractPreviewRecipeDetails(info_res);
   }
 
@@ -102,7 +100,6 @@ function give_ids_list(response){
     })
     return list_id;
   }
-//   give id of recipes from search
 /**
  * func that return recipes ids from the search response
  * @param response
@@ -114,7 +111,6 @@ function give_ids_list(response){
     })
     return list_id;
   }
-//   get 3 random recipes
 /**
  * Func that return list of 3 randoms precipices
  * @returns {Promise<*>}
@@ -140,9 +136,7 @@ async function getRandomRecipes() {
         }
     }
     const recipe_list_id= give_ids_list(response_back);
-    // console.log(recipe_list_id)
     let recipe_previ= getRecipesPreview(recipe_list_id);
-    // console.log(recipe_previ)
     return recipe_previ;
 }
 /**

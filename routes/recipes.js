@@ -13,15 +13,14 @@ router.get("/main_page_3_random",(req,res)=>{
   ).catch((err) => {res.sendStatus(500)});
 }
 )
-//TODO need to understand if it ok to leave it to only number and query? or we want to create filter system
-// this function allow for searching recipes by recieving the next paramaters:
-// 1. query(what i want to find like "pasta"), 2.number(number of result),cuisine or diet or intolerence
-// this function returns the preview information of all reciepes which include instructions
+
 /**
  * This path returns recipes that have the query in there title
+ * this function allow for searching recipes by recieving the next paramaters:
+ * 1. query(what i want to find like "pasta"), 2.number(number of result)
+ * this function returns the preview information of all reciepes which include instructions
  */
 router.get("/search",(req,res)=>{
-  // if(req.params.length===0||!req.query.query||!req.query.number||(!req.query.cuisine&&!req.query.diet&&!req.query.diet)){
   if(req.params.length===0||!req.query.query||!req.query.number){
     // ****maybe need to change the number of the status.and maybe thie validation should be in client side
     throw { status: 409, message: "didn't recieve one or more of the argument" };
