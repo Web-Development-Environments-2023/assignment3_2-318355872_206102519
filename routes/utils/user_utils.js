@@ -172,14 +172,13 @@ async function getRecentWatchedRecipes(user_id) {
       }
       return result;
   }
-  // get family recipes function. function returns list of all family recipt by user name
 /**
  * Func that returns all family recipes in full format of the user_id from the DB
  * @returns {Promise<*>}
  */
   async function GetFamilyRecipes(user_id){
     const query= `
-    SELECT title,readyInMinutes,image,about,servings,vegan,vegetarian,glutenFree,extendedIngredients,instructions
+    SELECT title,readyInMinutes,image,about,occasion,servings,vegan,vegetarian,glutenFree,extendedIngredients,instructions
     FROM recipes re join familyrecipes f on re.recipe_id = f.recipe_id
     WHERE re.user_id='${user_id}'
     `;

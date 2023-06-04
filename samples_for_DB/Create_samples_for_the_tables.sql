@@ -83,16 +83,13 @@ INSERT INTO recipes (user_id, title, readyInMinutes, image, servings, popularity
 VALUES (20, 'Mediterranean Salad', 15, 'mediterranean-salad.jpg', 2, 7, 1, 1, 1, 'lettuce, tomatoes, cucumber, red onion, olives, feta cheese, lemon juice, olive oil, herbs', '1. In a large bowl, combine lettuce, tomatoes, cucumber, red onion, olives, and crumbled feta cheese. 2. In a separate small bowl, whisk together lemon juice, olive oil, and herbs to make the dressing. 3. Pour the dressing over the salad and toss to coat. Serve chilled.');
 
 
-INSERT INTO familyrecipes (recipe_id, user_id, about) VALUES (1, 1, 'This is a delicious family recipe for spaghetti carbonara.');
-INSERT INTO familyrecipes (recipe_id, user_id, about) VALUES (2, 2, 'Try this mouthwatering family recipe for homemade pizza.');
-INSERT INTO familyrecipes (recipe_id, user_id, about) VALUES (3, 3, 'A classic family recipe for chicken pot pie that never disappoints.');
-INSERT INTO familyrecipes (recipe_id, user_id, about) VALUES (4, 4, 'This family recipe for chocolate chip cookies will satisfy your sweet tooth.');
-INSERT INTO familyrecipes (recipe_id, user_id, about) VALUES (5, 5, 'Indulge in this comforting family recipe for creamy mac and cheese.');
-INSERT INTO familyrecipes (recipe_id, user_id, about) VALUES (6, 6, 'Try this flavorful family recipe for grilled salmon with lemon butter sauce.');
-INSERT INTO familyrecipes (recipe_id, user_id, about) VALUES (7, 7, 'Impress your guests with this elegant family recipe for beef Wellington.');
-INSERT INTO familyrecipes (recipe_id, user_id, about) VALUES (8, 8, 'A hearty family recipe for beef stew that is perfect for cold winter nights.');
-INSERT INTO familyrecipes (recipe_id, user_id, about) VALUES (9, 9, 'This family recipe for chicken enchiladas is a crowd-pleaser.');
-INSERT INTO familyrecipes (recipe_id, user_id, about) VALUES (10, 10, 'Enjoy this refreshing family recipe for watermelon salad with feta and mint.');
+INSERT INTO familyrecipes (recipe_id, user_id, about, occasion)
+VALUES
+    (1, 1, 'This is a delicious family recipe for spaghetti carbonara.', 'Shavuot')
+    ,(2, 2, 'Try this mouthwatering family recipe for homemade pizza.', 'Shavuot')
+    ,(3, 3, 'A classic family recipe for chicken pot pie that never disappoints.', 'Pesach')
+    ,(4, 4, 'This family recipe for chocolate chip cookies will satisfy your sweet tooth.', 'Shavuot');
+COMMIT;
 
 INSERT INTO mypersonalrecipes (user_id, recipe_id)
 VALUES
