@@ -6,8 +6,10 @@ var logger = require("morgan");
 const session = require("client-sessions");
 const DButils = require("./routes/utils/DButils");
 var cors = require('cors')
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 
-var app = express();
+
+const app = express();
 app.use(logger("dev")); //logger
 app.use(express.json()); // parse application/json
 app.use(
@@ -49,11 +51,12 @@ const corsConfig = {
 app.use(cors(corsConfig));
 app.options("*", cors(corsConfig));
 
-var port = process.env.PORT || "80"; //local=3000 remote=80
+var port = process.env.PORT || "3000"; //local=3000 remote=80
 //#endregion
 const user = require("./routes/user");
 const recipes = require("./routes/recipes");
 const auth = require("./routes/auth");
+// const temp= require("./routes/temp_delete");
 
 
 //#region cookie middleware
@@ -80,6 +83,8 @@ app.get("/alive", (req, res) => res.send("I'm alive"));
 app.use("/users", user);
 app.use("/recipes", recipes);
 app.use(auth);
+// app.use("/users",temp);
+
 
 // Default router
 app.use(function (err, req, res, next) {
@@ -99,3 +104,4 @@ process.on("SIGINT", function () {
   }
   process.exit();
 });
+module.exports=app;

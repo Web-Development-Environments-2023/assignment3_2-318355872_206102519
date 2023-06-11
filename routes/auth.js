@@ -4,6 +4,7 @@ const MySql = require("../routes/utils/MySql");
 const DButils = require("../routes/utils/DButils");
 const bcrypt = require("bcrypt");
 
+
 router.post("/Register", async (req, res, next) => {
   try {
     // parameters exists
@@ -18,6 +19,7 @@ router.post("/Register", async (req, res, next) => {
       email: req.body.email,
       profilePic: req.body.profilePic
     }
+    
     let users = [];
     users = await DButils.execQuery("SELECT username from users");
 
@@ -30,9 +32,12 @@ router.post("/Register", async (req, res, next) => {
       parseInt(process.env.bcrypt_saltRounds)
     );
     await DButils.execQuery(
-      `INSERT INTO users VALUES ('${user_details.username}', '${user_details.firstname}', '${user_details.lastname}',
-      '${user_details.country}', '${hash_password}', '${user_details.email}')`
+      `INSERT INTO users VALUES (default,'${user_details.username}', '${user_details.firstname}', '${user_details.lastname}',
+      '${user_details.country}', '${hash_password}', '${user_details.email}','${user_details.profilePic}')`
     );
+    //checking that the element insereted (temporal solution for the problem )
+    DButils.execQuery("SELECT username from users");
+
     res.status(201).send({ message: "user created", success: true });
   } catch (error) {
     next(error);
@@ -52,25 +57,29 @@ router.post("/Login", async (req, res, next) => {
         `SELECT * FROM users WHERE username = '${req.body.username}'`
       )
     )[0];
-
+      console.log(user)
     if (!bcrypt.compareSync(req.body.password, user.password)) {
       throw { status: 401, message: "Username or Password incorrect" };
     }
-
+    console.log(user.user_id)
     // Set cookie
     req.session.user_id = user.user_id;
+    
 
 
     // return cookie
     res.status(200).send({ message: "login succeeded", success: true });
+    console.log(req.session)
   } catch (error) {
     next(error);
   }
 });
 
 router.post("/Logout", function (req, res) {
+  console.log(req.session)
   req.session.reset(); // reset the session info --> send cookie when  req.session == undefined!!
   res.send({ success: true, message: "logout succeeded" });
 });
+
 
 module.exports = router;

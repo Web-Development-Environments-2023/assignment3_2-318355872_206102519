@@ -1,13 +1,13 @@
-var mysql = require('mysql');
+var mysql = require('mysql2');
 require("dotenv").config();
+const path = require('path')
 
-
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 const config={
-connectionLimit:4,
-  host: process.env.host,//"localhost"
-  user: process.env.user,//"root"
-  password: "pass_root@123",
-  database:"mydb"
+  host: process.env.DB_HOST,//"localhost"
+  user: process.env.DB_USER,//"root"
+  password: process.env.DB_PASSWORD,
+  database:process.env.DB_DATABASE,
 }
 const pool = new mysql.createPool(config);
 
@@ -44,10 +44,5 @@ const query = (sql, binding) => {
   });
 };
 module.exports = { pool, connection, query };
-
-
-
-
-
 
 
