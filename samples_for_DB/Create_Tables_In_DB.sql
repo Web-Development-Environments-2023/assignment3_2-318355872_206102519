@@ -40,8 +40,8 @@ CREATE TABLE IF Not EXISTS familyrecipes(
     about text,
     occasion text,
     PRIMARY KEY (recipe_id),
-    foreign key (user_id) REFERENCES users(user_id),
-    foreign key (recipe_id) REFERENCES recipes(recipe_id)
+    foreign key (user_id) REFERENCES users(user_id)
+    -- foreign key (recipe_id) REFERENCES recipes(recipe_id)
 );
 
 
@@ -49,8 +49,8 @@ CREATE TABLE IF Not EXISTS mypersonalrecipes(
      recipe_id INT,
      user_id INT,
      PRIMARY KEY (recipe_id),
-     foreign key (user_id) REFERENCES users(user_id),
-     foreign key (recipe_id) REFERENCES recipes(recipe_id)
+     foreign key (user_id) REFERENCES users(user_id)
+    --  foreign key (recipe_id) REFERENCES recipes(recipe_id)
     );
 
 
