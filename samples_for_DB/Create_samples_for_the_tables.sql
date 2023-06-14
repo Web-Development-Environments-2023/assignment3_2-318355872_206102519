@@ -94,7 +94,7 @@ VALUES
 COMMIT;
 
 
-INSERT INTO watchedrecipes (recipe_id, user_id, date_watched)
+INSERT INTO watchedrecipes (user_id,recipe_id, date_watched)
 VALUES
     (2, 69095, '2023-05-01'),
     (3, 716429, '2023-05-02'),
