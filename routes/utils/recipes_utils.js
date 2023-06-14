@@ -117,9 +117,8 @@ function give_ids_list(response){
  */
 async function getRandomRecipes() {
     let response_back;
-    let counter=0
-    let good_result
-    =false
+    let counter=0;
+    let good_result=false;
     while(!good_result){
         response_back=await axios.get(`${api_domain}/random?number=3`, {
             params: {
@@ -132,7 +131,7 @@ async function getRandomRecipes() {
             }
         }
         if(counter===3){
-            good_result=true
+            good_result=true;
         }
     }
     const recipe_list_id= give_ids_list(response_back);
