@@ -42,8 +42,8 @@ router.get("/search",(req,res)=>{
  */
 router.get("/:recipe_id", async (req, res, next) => {
   try {
-    const recipe = await recipes_utils.getRecipeInfoClicking(req.params.recipe_id);
-    res.send(recipe);
+    let info_ret = await recipes_utils.getRecipeInfoClicking(req.params.recipe_id);
+    res.status(200).send({recipe:info_ret});
   } catch (error) {
     next(error);
   }
