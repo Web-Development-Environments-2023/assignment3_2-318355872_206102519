@@ -1,26 +1,4 @@
-# INSERT INTO users (username, firstname, lastname, country, password, email, profilePicture)
-# VALUES
-#     ('john_doe', 'John', 'Doe', 'United States', 'password1', 'john.doe@example.com', 'profile_picture1.jpg'),
-#     ('jane_smith', 'Jane', 'Smith', 'United Kingdom', 'password2', 'jane.smith@example.com', 'profile_picture2.jpg'),
-#     ('sam_jones', 'Sam', 'Jones', 'Canada', 'password3', 'sam.jones@example.com', 'profile_picture3.jpg'),
-#     ('emma_wilson', 'Emma', 'Wilson', 'Australia', 'password4', 'emma.wilson@example.com', 'profile_picture4.jpg'),
-#     ('david_smith', 'David', 'Smith', 'United States', 'password5', 'david.smith@example.com', 'profile_picture5.jpg'),
-#     ('olivia_brown', 'Olivia', 'Brown', 'United States', 'password6', 'olivia.brown@example.com', 'profile_picture6.jpg'),
-#     ('jacob_wilson', 'Jacob', 'Wilson', 'United States', 'password7', 'jacob.wilson@example.com', 'profile_picture7.jpg'),
-#     ('emily_johnson', 'Emily', 'Johnson', 'United Kingdom', 'password8', 'emily.johnson@example.com', 'profile_picture8.jpg'),
-#     ('michael_thompson', 'Michael', 'Thompson', 'Australia', 'password9', 'michael.thompson@example.com', 'profile_picture9.jpg'),
-#     ('sophia_rodriguez', 'Sophia', 'Rodriguez', 'United States', 'password10', 'sophia.rodriguez@example.com', 'profile_picture10.jpg'),
-#     ('alexander_garcia', 'Alexander', 'Garcia', 'United States', 'password11', 'alexander.garcia@example.com', 'profile_picture11.jpg'),
-#     ('isabella_martinez', 'Isabella', 'Martinez', 'United States', 'password12', 'isabella.martinez@example.com', 'profile_picture12.jpg'),
-#     ('daniel_rodriguez', 'Daniel', 'Rodriguez', 'United States', 'password13', 'daniel.rodriguez@example.com', 'profile_picture13.jpg'),
-#     ('sophie_miller', 'Sophie', 'Miller', 'United Kingdom', 'password14', 'sophie.miller@example.com', 'profile_picture14.jpg'),
-#     ('william_wilson', 'William', 'Wilson', 'United States', 'password15', 'william.wilson@example.com', 'profile_picture15.jpg'),
-#     ('mia_gonzalez', 'Mia', 'Gonzalez', 'United States', 'password16', 'mia.gonzalez@example.com', 'profile_picture16.jpg'),
-#     ('oliver_martin', 'Oliver', 'Martin', 'United Kingdom', 'password17', 'oliver.martin@example.com', 'profile_picture17.jpg'),
-#     ('lily_roberts', 'Lily', 'Roberts', 'United States', 'password18', 'lily.roberts@example.com', 'profile_picture18.jpg'),
-#     ('ethan_thomas', 'Ethan', 'Thomas', 'United States', 'password19', 'ethan.thomas@example.com', 'profile_picture19.jpg'),
-#     ('harper_anderson', 'Harper', 'Anderson', 'United States', 'password20', 'harper.anderson@example.com', 'profile_picture20.jpg');
-# COMMIT;
+
 -- need to execute the py file to create the users using api becuase of the encrpt of the password
 INSERT INTO recipes (user_id, title, readyInMinutes, image, servings, popularity, vegan, vegetarian, glutenFree, extendedIngredients, instructions)
 VALUES (1, 'Spaghetti Carbonara', 30, 'spaghetti-carbonara.jpg', 4, 9, 0, 0, 1, 'eggs, bacon, Parmesan cheese, black pepper', '1. Cook spaghetti according to package instructions. 2. In a separate pan, fry the bacon until crispy. 3. In a bowl, whisk together eggs, grated Parmesan cheese, and black pepper. 4. Drain cooked spaghetti and mix with the bacon. 5. Pour the egg mixture over the spaghetti and toss quickly to coat. Serve immediately.');
@@ -116,7 +94,7 @@ VALUES
 COMMIT;
 
 
-INSERT INTO watchedrecipes (recipe_id, user_id, date_watched)
+INSERT INTO watchedrecipes (user_id,recipe_id, date_watched)
 VALUES
     (2, 69095, '2023-05-01'),
     (3, 716429, '2023-05-02'),
