@@ -9,7 +9,7 @@ const {get_username_by_id} = require("./utils/user_utils");
  * Authenticate all incoming requests by middleware
  */
 router.use(async function (req, res, next) {
-  console.log(req.session)
+  console.log(req.session);
   if (req.session && req.session.user_id) {
     DButils.execQuery("SELECT user_id FROM users").then((users) => {
       if (users.find((x) => x.user_id === req.session.user_id)) {
@@ -82,7 +82,7 @@ router.get('/RecentThreeWatched', async (req, res) => {
     console.log(full_info_recipes)
     full_info_recipes = await recipe_utils.getRecipesPreview(full_info_recipes)
 
-    res.status(200).send(full_info_recipes);
+    res.status(200).send({recipes:full_info_recipes});
 
   } catch (error) {
     console.error(error);

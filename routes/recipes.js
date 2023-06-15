@@ -29,8 +29,8 @@ router.get("/search",(req,res)=>{
   params_to_search.query= req.query.query;
   params_to_search.number=req.query.number;
   params_to_search.instructionsRequired= true;
-  console.log(params_to_search.query)
-  console.log(params_to_search.number)
+  // console.log(params_to_search.query)
+  // console.log(params_to_search.number)
   // res.send("hi")
   recipes_utils.ExtractParameters(req.query,params_to_search);
   recipes_utils.SearchRecipes(params_to_search).

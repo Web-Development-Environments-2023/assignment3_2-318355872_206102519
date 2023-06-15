@@ -85,7 +85,7 @@ async function getRecipesPreview(recipes_ids_list) {
         promises.push(getRecipeInformation(id));
     });
     let info_res = await Promise.all(promises);
-    info_res.map((recp)=>{console.log(recp.data)});
+    // info_res.map((recp)=>{console.log(recp.data)});
     return extractPreviewRecipeDetails(info_res);
   }
 
@@ -118,6 +118,7 @@ function give_ids_list(response){
 async function getRandomRecipes() {
     let response_back;
     let counter=0;
+    let counter_check=0;
     let good_result=false;
     while(!good_result){
         response_back=await axios.get(`${api_domain}/random?number=3`, {
@@ -125,6 +126,7 @@ async function getRandomRecipes() {
                 apiKey: process.env.spooncular_apiKey
             }
         })
+        counter_check++;
         for(let i=0;i<response_back.data.recipes.length;i++){
             if(response_back.data.recipes[i].analyzedInstructions.length>0){
                 counter=counter+1;
@@ -134,12 +136,50 @@ async function getRandomRecipes() {
             good_result=true;
         }
     }
-    const recipe_list_id= give_ids_list(response_back);
-    let recipe_previ= getRecipesPreview(recipe_list_id);
+ 
+    // let recipe_previ=extractPreviewRecipeDetails(response_back);
+    // const recipe_list_id= give_ids_list(response_back);
+    // let recipe_previ= getRecipesPreview(recipe_list_id);
+    let recipe_previ=extractRandomPreview(response_back.data.recipes);
+
     return recipe_previ;
 }
-/**
- * Func that get recipe information by id. that's for page 7 after the user clicked on the picutre of ingredient
+
+ /** function that extract preview information for the random recipes
+ *  * @param search_respone
+ *  *@returns  {id,title,readyInMinutes,image,aggregateLikes,vegan,vegetarian,glutenFree}
+ */
+function extractRandomPreview(recipes_info) {
+    return recipes_info.map((recipe_info) => {
+        //check the data type so it can work with diffrent types of data
+        let data = recipe_info;
+        // if (recipe_info.data) {
+        //     data = recipe_info.data;
+        // }
+        const {
+            id,
+            title,
+            readyInMinutes,
+            image,
+            aggregateLikes,
+            vegan,
+            vegetarian,
+            glutenFree,
+        } = data;
+        return {
+            id: id,
+            title: title,
+            image: image,
+            readyInMinutes: readyInMinutes,
+            popularity: aggregateLikes,
+            vegan: vegan,
+            vegetarian: vegetarian,
+            glutenFree: glutenFree
+        }
+    })
+  }
+
+ /** Func that get recipe information by id. that's for page 7 after the user clicked on the picutre of ingredient
  * @param recipe_id
  * @returns {Promise<{readyInMinutes: *, image: *, servings: *, popularity: *, analyzedInstructions: *, vegetarian: *, glutenFree: *, id: *, vegan: *, title: *, extendedIngredients: *}>}
  */
