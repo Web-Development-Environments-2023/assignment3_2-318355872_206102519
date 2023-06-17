@@ -25,9 +25,12 @@ router.get("/search",(req,res)=>{
     // ****maybe need to change the number of the status.and maybe thie validation should be in client side
     throw { status: 409, message: "didn't recieve one or more of the argument" };
   }
-  params_to_search={};
-  params_to_search.query= req.query.query;
-  params_to_search.number=req.query.number;
+  params_to_search={}
+  params_to_search.query= req.query.query.trim();
+  params_to_search.number=req.query.number.trim();
+  params_to_search.intolerance=req.query.intolerance.trim();
+  params_to_search.diet=req.query.diet.trim();
+  params_to_search.cuisine=req.query.cuisine.trim();
   params_to_search.instructionsRequired= true;
   // console.log(params_to_search.query)
   // console.log(params_to_search.number)
@@ -35,7 +38,7 @@ router.get("/search",(req,res)=>{
   recipes_utils.ExtractParameters(req.query,params_to_search);
   recipes_utils.SearchRecipes(params_to_search).
   then((result)=>res.status(200).send({recipes:result})).
-  catch((err)=>{res.sendstatus(500)})
+  catch((err)=>{res.sendStatus(500)})
   });
 /**
  * This path returns a full details of a recipe by its id
