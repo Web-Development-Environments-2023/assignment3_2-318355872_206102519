@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS recipes (
    user_id INT,
    title VARCHAR(255),
    readyInMinutes INT,
-   image VARCHAR(255),
+   image text,
    servings INT,
    popularity INT,
    vegan TINYINT(1),
