@@ -12,6 +12,7 @@ const connection = await MySql.connection();
     console.log('ROLLBACK at querySignUp', err);
     throw err;
   } finally {
+    await connection.query("COMMIT");
     await connection.release();
   }
   return returnValue
