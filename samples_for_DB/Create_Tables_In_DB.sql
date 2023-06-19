@@ -57,7 +57,7 @@ CREATE TABLE IF Not EXISTS mypersonalrecipes(
 CREATE TABLE IF Not EXISTS watchedrecipes(
     recipe_id INT,
     user_id INT,
-    date_watched DATE,
+    date_watched Timestamp,
     PRIMARY KEY (recipe_id, user_id, date_watched),
     foreign key (user_id) REFERENCES users(user_id)
     );

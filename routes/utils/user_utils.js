@@ -19,8 +19,9 @@ async function getFavoriteRecipes(user_id){
  * Func that add to the WatchedRecipes Table record with the user_id and recipe_id
  */
 async function AddToWatchedRecipes(user_id,recipe_id){
-    const currentDate = new Date().toISOString().split('T')[0];
-    await DButils.execQuery(`INSERT INTO watchedrecipes VALUES ('${recipe_id}','${user_id}', '${currentDate}')`);
+    const currentDate = new Date().toISOString();
+    let Value = await DButils.execQuery(`INSERT INTO watchedrecipes VALUES ('${recipe_id}','${user_id}', '${currentDate}')`);
+    console.log(Value)
 }
 
 /**
@@ -70,11 +71,11 @@ async function CheckIfRecipeWatchedOrFavorite(recipe_id,user_id){
 async function getRecentWatchedRecipes(user_id) {
     try {
       const query = `
-      SELECT recipe_id
-      FROM watchedRecipes
-      WHERE user_id='${user_id}'
-      ORDER BY date_watched DESC
-      LIMIT 3
+        SELECT distinct(recipe_id), date_watched
+        FROM watchedRecipes
+        WHERE user_id='${user_id}'
+        ORDER BY date_watched DESC
+        LIMIT 3
       `;
       list_return_id=[]
       const result = await DButils.execQuery(query);
