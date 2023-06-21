@@ -184,7 +184,7 @@ router.get('/GetFamilyRecipes', async (req, res) => {
     const result = await user_utils.GetFamilyRecipes(req.session.user_id);
 
     console.log(result)
-    res.status(200).send(result);
+    res.status(200).send({result});
 
   } catch (error) {
     console.error(error);
