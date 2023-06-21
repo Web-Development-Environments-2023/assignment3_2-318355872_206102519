@@ -18,11 +18,46 @@ async function getFavoriteRecipes(user_id){
 /**
  * Func that add to the WatchedRecipes Table record with the user_id and recipe_id
  */
-async function AddToWatchedRecipes(user_id,recipe_id){
-    const currentDate = new Date().toISOString();
-    let Value = await DButils.execQuery(`INSERT INTO watchedrecipes VALUES ('${recipe_id}','${user_id}', '${currentDate}')`);
-    console.log(Value)
+async function AddToWatchedRecipes(user_id, recipe_id) {
+  const currentDate = new Date();
+  const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+
+  try {
+    const checkQuery = `
+      SELECT recipe_id
+      FROM watchedrecipes
+      WHERE recipe_id = ${recipe_id}
+      LIMIT 1
+    `;
+    const checkResult = await DButils.execQuery(checkQuery);
+
+    let query;
+    if (checkResult.length === 0) {
+      query = `
+        INSERT INTO watchedrecipes (recipe_id, user_id, date_watched)
+        VALUES (${recipe_id}, ${user_id}, '${formattedDate}')
+      `;
+    } else {
+      query = `
+        UPDATE watchedrecipes
+        SET date_watched = CONCAT(DATE(date_watched), ' ${formattedDate.split(' ')[1]}')
+        WHERE recipe_id = ${recipe_id}
+      `;
+    }
+
+    const result = await DButils.execQuery(query);
+    console.log(result);
+  } catch (error) {
+    console.error(error);
+  }
 }
+
+
+
+
+
+
+
 
 /**
  * Function that check for pair : recipe_id and user_id if the User have watch it or mark it as favorite using
@@ -69,26 +104,24 @@ async function CheckIfRecipeWatchedOrFavorite(recipe_id,user_id){
  * @returns {Promise<[]>}
  */
 async function getRecentWatchedRecipes(user_id) {
-    try {
-      const query = `
-        SELECT distinct(recipe_id), date_watched
-        FROM watchedRecipes
-        WHERE user_id='${user_id}'
-        ORDER BY date_watched DESC
-        LIMIT 3
-      `;
-      list_return_id=[]
-      const result = await DButils.execQuery(query);
-      console.log(result);
-      for(let i=0;i<result.length;i++){
-        list_return_id.push(result[i].recipe_id)
-      }
-      return list_return_id;
-    } catch (error) {
-      console.error(error);
-      throw new Error('Failed to retrieve recent watched recipes');
-    }
+  try {
+    const query = `
+      SELECT recipe_id
+      FROM watchedrecipes
+      WHERE user_id = ${user_id}
+      ORDER BY date_watched DESC
+      LIMIT 3
+    `;
+    const results = await DButils.execQuery(query);
+    const recipeIds = results.map((result) => result.recipe_id);
+    return recipeIds;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Failed to retrieve recent watched recipes');
   }
+}
+
+
 /**
  * Func that get all details that necessary to create record on the recipe table ,
  * and save the recipe_id and the user_id in mypersonalrecipes table
