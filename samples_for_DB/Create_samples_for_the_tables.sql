@@ -4,13 +4,13 @@ INSERT INTO recipes (user_id, title, readyInMinutes, image, servings, popularity
 VALUES (1, 'Spaghetti Carbonara', 30, 'spaghetti-carbonara.jpg', 4, 9, 0, 0, 1, 'eggs, bacon, Parmesan cheese, black pepper', '1. Cook spaghetti according to package instructions. 2. In a separate pan, fry the bacon until crispy. 3. In a bowl, whisk together eggs, grated Parmesan cheese, and black pepper. 4. Drain cooked spaghetti and mix with the bacon. 5. Pour the egg mixture over the spaghetti and toss quickly to coat. Serve immediately.');
 
 INSERT INTO recipes (user_id, title, readyInMinutes, image, servings, popularity, vegan, vegetarian, glutenFree, extendedIngredients, instructions)
-VALUES (2, 'Homemade Pizza', 45, 'homemade-pizza.jpg', 8, 8, 0, 1, 0, 'flour, yeast, water, tomato sauce, mozzarella cheese, toppings of your choice', '1. Prepare the pizza dough by mixing flour, yeast, and water. Let it rise for an hour. 2. Roll out the dough into a round shape. 3. Spread tomato sauce over the dough, leaving a border around the edges. 4. Sprinkle mozzarella cheese and add your favorite toppings. 5. Bake in a preheated oven at 425°F (220°C) for 15-20 minutes or until the crust is golden and the cheese is melted.');
+VALUES (1, 'Homemade Pizza', 45, 'homemade-pizza.jpg', 8, 8, 0, 1, 0, 'flour, yeast, water, tomato sauce, mozzarella cheese, toppings of your choice', '1. Prepare the pizza dough by mixing flour, yeast, and water. Let it rise for an hour. 2. Roll out the dough into a round shape. 3. Spread tomato sauce over the dough, leaving a border around the edges. 4. Sprinkle mozzarella cheese and add your favorite toppings. 5. Bake in a preheated oven at 425°F (220°C) for 15-20 minutes or until the crust is golden and the cheese is melted.');
 
 INSERT INTO recipes (user_id, title, readyInMinutes, image, servings, popularity, vegan, vegetarian, glutenFree, extendedIngredients, instructions)
-VALUES (3, 'Chicken Pot Pie', 60, 'chicken-pot-pie.jpg', 6, 7, 0, 0, 0, 'chicken, carrots, peas, onions, puff pastry', '1. Preheat the oven to 400°F (200°C). 2. In a saucepan, cook chicken, carrots, peas, and onions until tender. 3. In a separate saucepan, prepare the creamy filling with butter, flour, and milk. 4. Combine the cooked chicken and vegetables with the creamy filling. 5. Pour the mixture into a pie dish and cover with puff pastry. 6. Bake for 30-35 minutes or until the crust is golden brown.');
+VALUES (1, 'Chicken Pot Pie', 60, 'chicken-pot-pie.jpg', 6, 7, 0, 0, 0, 'chicken, carrots, peas, onions, puff pastry', '1. Preheat the oven to 400°F (200°C). 2. In a saucepan, cook chicken, carrots, peas, and onions until tender. 3. In a separate saucepan, prepare the creamy filling with butter, flour, and milk. 4. Combine the cooked chicken and vegetables with the creamy filling. 5. Pour the mixture into a pie dish and cover with puff pastry. 6. Bake for 30-35 minutes or until the crust is golden brown.');
 
 INSERT INTO recipes (user_id, title, readyInMinutes, image, servings, popularity, vegan, vegetarian, glutenFree, extendedIngredients, instructions)
-VALUES (4, 'Chocolate Chip Cookies', 25, 'chocolate-chip-cookies.jpg', 12, 9, 0, 1, 0, 'butter, sugar, brown sugar, eggs, vanilla extract, flour, baking soda, chocolate chips', '1. Preheat the oven to 375°F (190°C). 2. In a mixing bowl, cream together butter, sugar, and brown sugar. 3. Add eggs one at a time, beating well after each addition. 4. Stir in vanilla extract. 5. In a separate bowl, combine flour and baking soda. Gradually add to the butter mixture. 6. Stir in chocolate chips. 7. Drop rounded tablespoons of dough onto a greased baking sheet. 8. Bake for 9-11 minutes or until golden brown. Cool on wire racks.');
+VALUES (1, 'Chocolate Chip Cookies', 25, 'chocolate-chip-cookies.jpg', 12, 9, 0, 1, 0, 'butter, sugar, brown sugar, eggs, vanilla extract, flour, baking soda, chocolate chips', '1. Preheat the oven to 375°F (190°C). 2. In a mixing bowl, cream together butter, sugar, and brown sugar. 3. Add eggs one at a time, beating well after each addition. 4. Stir in vanilla extract. 5. In a separate bowl, combine flour and baking soda. Gradually add to the butter mixture. 6. Stir in chocolate chips. 7. Drop rounded tablespoons of dough onto a greased baking sheet. 8. Bake for 9-11 minutes or until golden brown. Cool on wire racks.');
 
 INSERT INTO recipes (user_id, title, readyInMinutes, image, servings, popularity, vegan, vegetarian, glutenFree, extendedIngredients, instructions)
 VALUES (5, 'Caesar Salad', 15, 'caesar-salad.jpg', 4, 8, 0, 1, 1, 'romaine lettuce, croutons, Parmesan cheese, Caesar dressing', '1. Tear the romaine lettuce into bite-sized pieces and place in a large bowl. 2. Add croutons and grated Parmesan cheese. 3. Drizzle with Caesar dressing. 4. Toss the salad until well-coated. Serve immediately.');
@@ -61,36 +61,36 @@ INSERT INTO recipes (user_id, title, readyInMinutes, image, servings, popularity
 VALUES (20, 'Mediterranean Salad', 15, 'mediterranean-salad.jpg', 2, 7, 1, 1, 1, 'lettuce, tomatoes, cucumber, red onion, olives, feta cheese, lemon juice, olive oil, herbs', '1. In a large bowl, combine lettuce, tomatoes, cucumber, red onion, olives, and crumbled feta cheese. 2. In a separate small bowl, whisk together lemon juice, olive oil, and herbs to make the dressing. 3. Pour the dressing over the salad and toss to coat. Serve chilled.');
 
 
-INSERT INTO familyrecipes (recipe_id, user_id, about, occasion)
+INSERT INTO familyrecipes (recipe_id, user_id, about, occasion,chef)
 VALUES
-    (1, 1, 'This is a delicious family recipe for spaghetti carbonara.', 'Shavuot')
-    ,(2, 2, 'Try this mouthwatering family recipe for homemade pizza.', 'Shavuot')
-    ,(3, 3, 'A classic family recipe for chicken pot pie that never disappoints.', 'Pesach')
-    ,(4, 4, 'This family recipe for chocolate chip cookies will satisfy your sweet tooth.', 'Shavuot');
+    (43, 1, 'This is a delicious family recipe for spaghetti carbonara.', 'Shavuot',"GrandMother")
+    ,(44, 1, 'Try this mouthwatering family recipe for homemade pizza.', 'Shavuot','GrandFather')
+    ,(45, 1, 'A classic family recipe for chicken pot pie that never disappoints.', 'Pesach','GrandMother')
+    ,(46, 1, 'This family recipe for chocolate chip cookies will satisfy your sweet tooth.', 'Shavuot','GrandMother');
 COMMIT;
 
 INSERT INTO mypersonalrecipes (user_id, recipe_id)
 VALUES
-    (3, 3),
-    (5, 8),
-    (12, 5),
-    (14, 10),
-    (15, 7),
-    (16, 12),
-    (7, 1),
-    (14, 6),
-    (15, 9),
-    (15, 15),
-    (16, 2),
-    (16, 11),
-    (17, 4),
-    (17, 13),
-    (18, 20),
-    (18, 17),
-    (19, 14),
-    (19, 19),
-    (10, 16),
-    (20, 18);
+    (1, 43),
+    (1, 44),
+    (1, 45),
+    (1, 46);
+    -- (15, 7),
+    -- (16, 12),
+    -- (7, 1),
+    -- (14, 6),
+    -- (15, 9),
+    -- (15, 15),
+    -- (16, 2),
+    -- (16, 11),
+    -- (17, 4),
+    -- (17, 13),
+    -- (18, 20),
+    -- (18, 17),
+    -- (19, 14),
+    -- (19, 19),
+    -- (10, 16),
+    -- (20, 18);
 COMMIT;
 
 

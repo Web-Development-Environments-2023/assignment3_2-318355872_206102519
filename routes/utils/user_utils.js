@@ -109,7 +109,7 @@ async function getRecentWatchedRecipes(user_id) {
  */
   async function GetPreviePersonalRecipes(user_id){
     const query = `
-      SELECT title,readyInMinutes,image,popularity,vegan,vegetarian,glutenFree
+      SELECT m.recipe_id as id,title,readyInMinutes,image,popularity,vegan,vegetarian,glutenFree
       FROM recipes re join mypersonalrecipes m on re.recipe_id = m.recipe_id
       WHERE re.user_id='${user_id}'
       `;
@@ -145,7 +145,7 @@ async function getRecentWatchedRecipes(user_id) {
  */
   async function GetfullPersonalRecipes(user_id){
     const query = `
-      SELECT title,readyInMinutes,image,servings,popularity,vegan,vegetarian,glutenFree,extendedIngredients,instructions
+      SELECT re.recipe_id as id,title,readyInMinutes,image,servings,popularity,vegan,vegetarian,glutenFree,extendedIngredients,instructions
       FROM recipes re join mypersonalrecipes m on re.recipe_id = m.recipe_id
       WHERE re.user_id='${user_id}'
       `;
@@ -179,7 +179,7 @@ async function getRecentWatchedRecipes(user_id) {
  */
   async function GetFamilyRecipes(user_id){
     const query= `
-    SELECT title,readyInMinutes,image,about,occasion,servings,vegan,vegetarian,glutenFree,extendedIngredients,instructions
+    SELECT re.recipe_id as id, title,readyInMinutes,image,about,occasion,servings,vegan,vegetarian,glutenFree,extendedIngredients,instructions,chef
     FROM recipes re join familyrecipes f on re.recipe_id = f.recipe_id
     WHERE re.user_id='${user_id}'
     `;
