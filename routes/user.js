@@ -177,11 +177,27 @@ router.get("/CheckFavoriteWatched/:recipeIds", async (req, res) => {
   }
 });
 /**
- * This path returns the family recipes of the connected user in full format
+ * This path returns the family recipes of the connected user
  */
 router.get('/GetFamilyRecipes', async (req, res) => {
   try {
-    const result = await user_utils.GetFamilyRecipes(req.session.user_id);
+    const result = await user_utils.GetFamilyPreViewRecipes(req.session.user_id);
+
+    console.log(result)
+    res.status(200).send({result});
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+/**
+ * This path return family recipe of the connected user in full format
+ */
+router.get('/GetFamilyRecipeFullView/:recipe_id', async (req, res) => {
+  try {
+    const result = await user_utils.GetFamilyRecipeFullView(req.session.user_id, req.params.recipe_id);
 
     console.log(result)
     res.status(200).send({result});

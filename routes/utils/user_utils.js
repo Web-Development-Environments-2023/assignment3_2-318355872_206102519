@@ -210,9 +210,9 @@ async function getRecentWatchedRecipes(user_id) {
  * Func that returns all family recipes in full format of the user_id from the DB
  * @returns {Promise<*>}
  */
-  async function GetFamilyRecipes(user_id){
+  async function GetFamilyPreViewRecipes(user_id){
     const query= `
-    SELECT re.recipe_id as id, title,readyInMinutes,image,about,occasion,servings,vegan,vegetarian,glutenFree,extendedIngredients,instructions,chef
+    SELECT re.recipe_id as id,title,readyInMinutes,image,popularity,vegan,vegetarian,glutenFree
     FROM recipes re join familyrecipes f on re.recipe_id = f.recipe_id
     WHERE re.user_id='${user_id}'
     `;
@@ -240,6 +240,44 @@ async function getRecentWatchedRecipes(user_id) {
 
   }
   return result;
+}
+/**
+ * Func that returns family recipe in full format of the user_id from the DB
+ * @returns {Promise<*>}
+ */
+async function GetFamilyRecipeFullView(user_id, recipe_id){
+  const query= `
+    SELECT re.recipe_id as id, title,readyInMinutes,image,about,occasion,servings,vegan,vegetarian,glutenFree,extendedIngredients,instructions,chef
+    FROM recipes re join familyrecipes f on re.recipe_id = f.recipe_id
+    WHERE re.user_id='${user_id}' and re.recipe_id = '${recipe_id}'
+    `;
+  let result = await DButils.execQuery(query);
+  for(let row in result){
+
+    if(result[row].glutenFree===0){
+      result[row].glutenFree=false;
+    }
+    else{
+      result[row].glutenFree=true
+    }
+    if( result[row].vegan===0){
+      result[row].vegan=false;
+    }
+    else{
+      result[row].vegan=true
+    }
+    if( result[row].vegetarian===0){
+      result[row].vegetarian=false;
+    }
+    else{
+      result[row].vegetarian=true
+    }
+
+  }
+  if (result.length > 0){
+    return result[0];
+  }
+  return [];
 }
 
 /**
@@ -271,5 +309,6 @@ exports.AddPersonalRecipes=AddPersonalRecipes;
 exports.GetPreviePersonalRecipes=GetPreviePersonalRecipes;
 exports.GetfullPersonalRecipes=GetfullPersonalRecipes;
 exports.CheckIfRecipeWatchedOrFavorite=CheckIfRecipeWatchedOrFavorite
-exports.GetFamilyRecipes=GetFamilyRecipes
+exports.GetFamilyPreViewRecipes=GetFamilyPreViewRecipes
+exports.GetFamilyRecipeFullView=GetFamilyRecipeFullView;
 exports.get_username_by_id=get_username_by_id;
