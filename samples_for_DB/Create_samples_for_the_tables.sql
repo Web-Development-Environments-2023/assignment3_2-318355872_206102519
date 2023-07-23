@@ -63,7 +63,7 @@ VALUES (20, 'Mediterranean Salad', 15, 'mediterranean-salad.jpg', 2, 7, 1, 1, 1,
 
 INSERT INTO familyrecipes (recipe_id, user_id, about, occasion,chef)
 VALUES
-    (43, 1, 'This is a delicious family recipe for spaghetti carbonara.', 'Shavuot',"GrandMother")
+    (43, 1, 'This is a delicious family recipe for spaghetti carbonara.', 'Shavuot','GrandMother')
     ,(44, 1, 'Try this mouthwatering family recipe for homemade pizza.', 'Shavuot','GrandFather')
     ,(45, 1, 'A classic family recipe for chicken pot pie that never disappoints.', 'Pesach','GrandMother')
     ,(46, 1, 'This family recipe for chocolate chip cookies will satisfy your sweet tooth.', 'Shavuot','GrandMother');

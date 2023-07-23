@@ -43,6 +43,22 @@ router.post("/Register", async (req, res, next) => {
     next(error);
   }
 });
+/**function to check if the username it exists or not **/
+router.get('/Register', async (req, res) => {
+  let UserNameTaken = false;
+  try{
+    const users = await DButils.execQuery("SELECT username FROM users");
+    if (users.find((x) => x.username === req.query.username))
+    {
+      UserNameTaken = true;
+    }
+    res.status(200).send({ UserNameTaken:UserNameTaken})
+    console.log(UserNameTaken)
+  }catch (error) {
+    res.status(200).send({ UserNameTaken:UserNameTaken})
+    console.log(UserNameTaken)
+  }
+});
 
 router.post("/Login", async (req, res, next) => {
   try {

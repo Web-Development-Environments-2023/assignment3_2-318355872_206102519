@@ -39,6 +39,7 @@ CREATE TABLE IF Not EXISTS familyrecipes(
     user_id INT,
     about text,
     occasion text,
+    chef text,
     PRIMARY KEY (recipe_id),
     foreign key (user_id) REFERENCES users(user_id)
     -- foreign key (recipe_id) REFERENCES recipes(recipe_id)
